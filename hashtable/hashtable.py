@@ -162,19 +162,19 @@ class HashTable:
 
         index = self.hash_index(key)
 
-        if self.table[index] is None:
+        if self.storage[index] is None:
             return None
 
-        elif self.table[index].key == key:
+        elif self.storage[index].key == key:
             self.items -= 1
-            if self.table[index].next is not None:
-                self.table[index] = self.table[index].next
+            if self.storage[index].next is not None:
+                self.storage[index] = self.storage[index].next
             else:
-                self.table[index] = None
+                self.storage[index] = None
 
         else:
-            prev = self.table[index]
-            current = self.table[index].next
+            prev = self.storage[index]
+            current = self.storage[index].next
             while current is not None:
                 if current.key == key:
                     prev.next = current.next
@@ -229,9 +229,9 @@ class HashTable:
         """
         # Your code here
 
-        old_table = self.table
+        old_table = self.storage
         self.capacity = new_capacity
-        self.table = [None] * new_capacity
+        self.storage = [None] * new_capacity
         for node in old_table:
             if node is not None:
                 self.put(node.key, node.value)
