@@ -1,15 +1,11 @@
 def no_dups(s):
     # Your code here
-    cache = {}
-
-    words = s.split()
-    solo_words = ""
-    for word in words:
-        if word not in cache:
-            solo_words = solo_words + word + " "
-            cache[word] = 1
-
-    return solo_words.strip(" ")
+    s_list = s.split()
+    output = ""
+    for word in s_list:
+        if output.find(word) == -1:
+            output = output + word + " "
+    return output.strip(" ")
 
 
 if __name__ == "__main__":
