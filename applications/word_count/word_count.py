@@ -1,5 +1,28 @@
 def word_count(s):
     # Your code here
+    cache = {}
+    words_raw = s.split()
+    words = []
+
+    for x in words_raw:
+        new_word = x.lower().strip('":;,.-+=/\|[]{}()*^&')
+        words.append(new_word)
+
+    unique_words = set(words)
+
+    for word in unique_words:
+        count = 0
+        if word != "":
+            for comparison in words:
+                if word == comparison:
+                    count += 1
+
+            cache[word] = count
+
+    return cache
+
+
+
 
 
 
