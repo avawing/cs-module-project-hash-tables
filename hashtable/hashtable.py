@@ -7,6 +7,9 @@ class HashTableEntry:
         self.value = value
         self.next = None
 
+    def __str__(self):
+        return f"HashTableEntry({self.key}, {self.value})"
+
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
@@ -94,6 +97,7 @@ class HashTable:
         #return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
+
     def put(self, key, value):
         """
         Store the value with the given key.
@@ -103,9 +107,38 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # Day One
+        # index = self.hash_index(key)
+        # self.storage[index] = HashTableEntry(key, value)
+
+        #Day Two
 
         index = self.hash_index(key)
-        self.storage[index] = HashTableEntry(key, value)
+
+        new_entry = HashTableEntry(key, value)
+
+        if self.table[index] is not None:
+            if self.table[index].key == key:
+                self.table[index].value = value
+            else:
+                current = self.table[index]
+
+            while current.next is not None:
+                if current.key == key:
+                    current.value = value
+                current = current.next
+                if current.key == key:
+                    current.value = value
+                else:
+                    current.next = new_entry
+        else:
+            self.table[index] = new_entry
+
+        self.items += 1
+        if self.get_load_factor() >= 7:
+            self.resize((self.capacity *2))
+
+
 
 
     def delete(self, key):
@@ -117,13 +150,40 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # Day One
+        # index = self.hash_index(key)
+        #
+        # if self.storage[index]:
+        #     self.storage[index] = None
+        # else:
+        #     print(f'{key} is not in the hash table')
+
+        # Day Two
 
         index = self.hash_index(key)
 
-        if self.storage[index]:
-            self.storage[index] = None
+        if self.storage[index] is None:
+            return None
+
+        elif self.storage[index].key == key:
+            self.items -= 1
+            if self.storage[index].next is not None:
+                self.storage[index] = self.storage[index].next
+            else:
+                self.storage[index] = None
+
         else:
-            print(f'{key} is not in the hash table')
+            prev = self.storage[index]
+            current = self.storage[index].next
+            while current is not None:
+                if current.key == key:
+                    prev.next = current.next
+                    self.items -= 1
+                else:
+                    prev = current
+                    current = current.next
+            return "Nothing to see here"
+
 
     def get(self, key):
         """
@@ -134,13 +194,31 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # Day One
+        # index = self.hash_index(key)
+        #
+        # if self.storage[index]:
+        #     return self.storage[index].value
+        # else:
+        #     return None
+
+        # Day Two
+
         index = self.hash_index(key)
-
-        if self.storage[index]:
-            return self.storage[index].value
-        else:
+        if self.table[index] is None:
             return None
+        elif self.table[index] == key:
+            return self.table[index].value
+        elif self.table[index] is not None:
+            current = self.table[index]
+            while current.next is not None:
+                next_node = current.next
+                if next_node.key -- key:
+                    return next_node.value
+                else:
+                    current = next_node
 
+            return None
 
     def resize(self, new_capacity):
         """
@@ -150,6 +228,13 @@ class HashTable:
         Implement this.
         """
         # Your code here
+
+        old_table = self.storage
+        self.capacity = new_capacity
+        self.storage = [None] * new_capacity
+        for node in old_table:
+            if node is not None:
+                self.put(node.key, node.value)
 
 
 
